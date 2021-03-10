@@ -10,3 +10,26 @@ img{
     color:yellowgreen;
     padding: 3% 0;
 }
+.color-primary{
+    color: #003859
+}
+.color-primary-bg{
+    background: #003859
+}
+.color-second{
+    color: #00A5C4
+}
+.color-second-bg{
+    background: #00A5C4
+}
+.color-yellow{
+    color: #FFD298
+}
+.color-yellow-bg{
+    background: #FFD298
+}
+#cart-count{
+    text-align: right;
+    padding: 0 0.9rem 0.1rem 0.9rem;
+    border-radius: 3rem;
+}

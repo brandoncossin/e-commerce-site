@@ -1,9 +1,43 @@
 <?php
+
+    //start session
+    session_start();
     require_once('./php/CreateDb.php');
     require_once('./php/component.php');
 
     //create instance of Createdb class
     $database = new CreateDb("Productdb", "Producttb");
+    if (isset($_POST['add'])){
+      /// print_r($_POST['product_id']);
+      if(isset($_SESSION['cart'])){
+  
+          $item_array_id = array_column($_SESSION['cart'], "product_id");
+  
+          if(in_array($_POST['product_id'], $item_array_id)){
+              echo "<script>alert('Product is already added in the cart..!')</script>";
+              echo "<script>window.location = 'index.php'</script>";
+          }else{
+  
+              $count = count($_SESSION['cart']);
+              $item_array = array(
+                  'product_id' => $_POST['product_id']
+              );
+  
+              $_SESSION['cart'][$count] = $item_array;
+          }
+  
+      }else{
+  
+          $item_array = array(
+                  'product_id' => $_POST['product_id']
+          );
+  
+          // Create new session variable
+          $_SESSION['cart'][0] = $item_array;
+          print_r($_SESSION['cart']);
+      }
+  }
+  
 
 ?>
 
@@ -26,6 +60,8 @@
 
     <link rel="stylesheet" href="style.css"> 
 
+  <!-- J-Query-->
+  <script src="jquery-3.5.1.min.js"></script>
 
 </head>
 <body>
@@ -34,19 +70,81 @@
     <header>
     <div class="strip d-flex justify-content-between px-4 py-1 bg-light">
     <P class= "font-size-20 text-black-50 m-0"> Project Created For Intro-To-Database-Design </p>
+    <div class="font-size-14">
+    <a href = "#" class="px-3 border-right border-left text-dark">Login</a>
+    <a href = "#" class="px-3 border-right text-dark">Wishlist(0)</a>
     </div>
+    </div>
+    <!--start #nav-bar -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark color-second-bg">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Fashion Fun House</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav m-auto font-rubik">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">On Sale</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Category</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Category</a>
+        </li>
+      </ul>
+      <form action= "#" class= "font-size-14 font-rale">
+      <a href = "#" class = "py-2 rounded-pill color-primary-bg">
+      <span class="font-size-16 px-2 text-white"> <i class="fas fa-shopping-cart"></i></span>
+      <span class="px-3 py-2 rounded-pill text-dark bg-light">
+      <?php
+
+if(isset($_SESSION['cart'])){
+  $count = count($_SESSION['cart']);
+  echo "<span id=\"cart_count\" class=\"text-warning bg-light\">$count</span>";
+}else{
+  echo "<span id=\"cart_count\" class=\"text-warning bg-light\">0</span>";
+
+}
+?>
+</span>
+</a>
+</form>
+    </div>
+  </div>
+</nav>
+
+
+
     </header>
 
 <!--!start #header -->
 
+
 <!--start #main-site -->
 <div class="container">
     <div class="row text-center py-5">
+    
     <?php
+    
     $result = $database->getData();
     while($row = mysqli_fetch_assoc($result)){
-        component($row['product_name'], $row['product_price'], $row['product_image']);
+        component($row['product_name'], $row['product_price'], $row['product_image'], $row['id']);
     }
+    
+    /*
+    $sql = "SELECT * FROM producttb WHERE id = 4";
+    $result = mysqli_query($database->con, $sql);
+
+    while($row = mysqli_fetch_assoc($result)){
+      component($row['product_name'], $row['product_price'], $row['product_image'], $row['id']);
+    }
+    */
         ?>
     </div>
 </div>
