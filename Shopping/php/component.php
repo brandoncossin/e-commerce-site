@@ -6,22 +6,14 @@ function component($productname, $productprice, $productimg, $productid ){
         <form action=\"index.php\" method=\"post\">
         <div class=\"card shadow\">
         <div>
-        <img src=\"$productimg\" alt=\"Image1\" class= \"img-fluid card-img-top\">
+        <img src=\"$productimg\" alt=\"Image1\" class= \"img-fluid card-img-top\" style=\"height:400px;\">
         </div>
         <div class= \"card-body\">
         <h5 class=\"card-title\">$productname</h5>
-        <h6>
-        <i class=\"fas fa-star\"> </i> 
-        <i class=\"fas fa-star\"> </i> 
-        <i class=\"fas fa-star\"> </i> 
-        <i class=\"fas fa-star\"> </i> 
-        <i class=\"far fa-star\"> </i> 
-        </h6>
         <p class=\"card-text\">
             Some quick example text to build on the card.
         </p>
         <h5>
-        <small><s class=\"text-secondary\">$519</s></small>
             <span class=\"price\">$$productprice</span>
         </h5>
 

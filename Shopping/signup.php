@@ -45,23 +45,8 @@ if (isset($_POST['add'])){
   }
 }
 
-/*
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-if (empty($_GET["name"])) {
-  $nameErr = "Name is required";
-} else {
-  $name = test_input($_GET["name"]);
-  // check if name only contains letters and whitespace
-  if (!preg_match("/^[a-zA-Z-' ]*$/",$name)) {
-    $nameErr = "Only letters and white space allowed";
-  }
-}
-}
-*/
-//This checks the Get request for name
-if(isset($_GET['name'])){
-  $name = test_input($_GET["name"]);
-}
+
+
 //Function that prevents sql injection on input
 function test_input($data) {
 $data = trim($data);
@@ -69,30 +54,8 @@ $data = stripslashes($data);
 $data = htmlspecialchars($data);
 return $data;
 }
-//This checks the Get request for brand
-if(isset($_GET['brand-select'])){
-$brand = $_GET['brand-select'];
-}
-//This gets the Post request for method of order
-if(isset($_POST['order-select'])){
-  $order = $_POST['order-select'];
-  //price order
-  if($order == "High to Low"){
-    $order = "DESC";
-  }
-  if($order == "Low to High"){
-    $order = "ASC";
-  }
-  //alphabetical order
-  if($order == "AZ"){
-  $AZorder = "ASC";
-  }
-  if($order == "ZA"){
-  $AZorder = "DESC";
-  }
-}
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -129,7 +92,7 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
 </head>
 <body>
 <!-- start #header -->
-    <header>
+<header>
     <div class="strip d-flex justify-content-between px-4 py-1 bg-light">
     <P class= "font-size-20 text-black-50 m-0"> Project Created For Intro-To-Database-Design </p>
     <div class="font-size-14">
@@ -145,33 +108,19 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <!--Start search -->
-    
-<form method="get" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">  
-  
-  <div class="input-group">
-      <input class="form-control" placeholder="Search for..." type="text" name="name" value="<?php echo $name;?>">
-      <span class="input-group-btn">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </span>
-    </div>
-  </form>
-
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav m-auto ">
         <li class="nav-item">
           <a class="nav-link" href="index.php">Home</a>
         </li>
-        <!-- Brand Select -->
         <li class="nav-item">
-          <a class="nav-link" href="index.php?brand-select=Samsung#"
-          id = "Samsung-submit" type="submit" name="brand-select" value="Samsung">Samsung</a>
+          <a class="nav-link" href="signup.php"></a>
         </li>
-          <a class="nav-link" href="index.php?brand-select=Apple" 
-          id = "Samsung-submit" type="submit" name="brand-select" value="Apple">Apple</a>
-          <li class="nav-item">
-          <a class="nav-link" href="index.php?brand-select=Microsoft"
-          id = "Microsoft-submit" type="submit" name="brand-select" value="Microsoft">Microsoft</a>
+        <li class="nav-item">
+          <a class="nav-link" href="signup.php"></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="signup.php"></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="signup.php">Sign up</a>
@@ -180,7 +129,6 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
           <a class="nav-link" href="login.php">Log in</a>
         </li>
   </form>
-        
       </ul>
       <form action= "#" class= "font-size-14 font-rale">
       <a href = "#" class = "py-2 rounded-pill color-primary-bg">
@@ -204,83 +152,39 @@ if(isset($_SESSION['cart'])){
   </div>
 </nav>
     </header>
+</body>
 
-<!--!start #header -->
-
-<!--start #main-site -->
-<!-- Start of filter tab dropdown -->
-<div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" 
-  data-bs-toggle="dropdown" aria-expanded="false">
-    Filters
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-  <form action="" method="post">  
-   
-   <button class="dropdown-item" id = "ASC-submit" type="submit" name="order-select" value="Low to High">
-   Price, Low to High</button>
-   <button class="dropdown-item" id = "DESC-submit" type="submit" name="order-select" value="High to Low">
-   Price, High to Low</button>
-   <button class="dropdown-item" id = "AZ-submit" type="submit" name="order-select" value="AZ">
-   Alphabetical, A to Z</button>
-   <button class="dropdown-item" id = "ZA-submit" type="submit" name="order-select" value="ZA">
-   Alphabetical, Z to A</button>
-  </form>
-  </ul>
-<br><br>
-<br>
-  
-<div class="container">
-<div class="row text-center py-5">
-    <?php
-
-  //DEFAULT "COMMAND" AS OF NOW
-  // THIS COMMAND SHOULD BE REPLACED WITH A MORE "SORTED" LOOK RATHER THAN HOW STUFF IS PLACED IN DB
-  $sql = "SELECT * FROM producttb ORDER by brand ASC";
-
-  //SWITCH CASES THAT DETERMINE WHAT FILTERS ARE USED
-  if ($name != ""){
-    $sql = "SELECT * FROM producttb WHERE product_name LIKE '%$name%'";
-  }
-  if($brand != ""){
-    $sql = "SELECT * FROM producttb WHERE brand LIKE '%$brand%'";
-  }
-  if($order != ""){
-    $sql = "SELECT * FROM producttb ORDER BY product_price $order";
-  }
-  if($AZorder != ""){
-    $sql = "SELECT * FROM producttb ORDER BY product_name $AZorder";
-  }
-  if($brand != "" && $order != ""){
-    $sql = "SELECT * FROM producttb
-    WHERE brand Like '%$brand%'
-    ORDER by product_price $order";
-  }
-  if($brand != "" && $AZorder != ""){
-    $sql = "SELECT * FROM producttb
-    WHERE brand Like '%$brand%'
-    ORDER by product_name $AZorder";
-  }
-  if ($name != "" && $order !=""){
-    $sql = "SELECT * FROM producttb WHERE product_name LIKE '%$name%' ORDER by product_price $order";
-  }
-  if ($name != "" && $AZorder !=""){
-    $sql = "SELECT * FROM producttb WHERE product_name LIKE '%$name%' ORDER by product_name $AZorder";
-  }
-  //PROCESSES THE SQL COMMAND
-    $result = mysqli_query($database->con, $sql);
-    while($row = mysqli_fetch_assoc($result)){
-      component($row['product_name'], $row['product_price'], $row['product_image'], $row['id']);
-    }
-    
-        ?>
+<!--start of main-->
+<div class="col d-flex justify-content-center">
+<div class="card" style="width: 35rem;">
+  <div class="card-body">
+    <h5 class="card-title">Sign Up</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Create your account. It's free and only takes a minute.</h6>
+    <ul class="list-group list-group-flush">
+    <form action= "includes/signup.inc.php" method="post"> 
+    <div class="row">
+    <li class="list-group-item"><input type="text" name="name" placeholder="Name..."></li>
+</div>
+    <div class="row">
+    <li class="list-group-item"><input type="text" name="email" placeholder="Email..."></li>
+</div>
+<div class="row">
+    <li class="list-group-item"><input type="text" name="uid" placeholder="Username..."></li>
+</div>
+    <div class="row">
+    <li class="list-group-item">
+    <input type="password" name="pwd" placeholder="Password...">
+    <input type="password" name="pwdrepeat" placeholder="Repeat Password..."></li>
+</div>
+    <div class="row">
+    <div class="col-4">
+        <button type="submit" name="submit">Sign Up</button>
+</div>
     </div>
+</form>
+  </ul>
+  </div>
 </div>
 
-<!--start #footer-->
-    <footer>
 
-    </footer>
-    
-</body>
 </html>
