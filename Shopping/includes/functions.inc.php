@@ -30,10 +30,7 @@ function emptyInputLogin($username, $pwd){
 function uidExists($conn, $username){
     $sql = "SELECT * FROM account WHERE accountUsername = ?;";
     $stmt = mysqli_stmt_init($conn);
-    if(!mysqli_stmt_prepare($stmt, $sql)){
-        header("location: ../signup.php?error=stmtfailed");
-        exit();
-    }
+    $username = stripcslashes($username);
     mysqli_stmt_bind_param($stmt, "s", $username);
     mysqli_stmt_execute($stmt);
     $resultData = mysqli_stmt_get_result($stmt);
@@ -48,10 +45,6 @@ function uidExists($conn, $username){
 function createUser($conn, $name, $email, $username, $pwd){
     $sql = "INSERT INTO account(accountID, accountName, accountEmail, accountUsername, accountPassword, accountWallet) VALUES (NULL, ?, ?, ?, ?, 0);";
     $stmt = mysqli_stmt_init($conn);
-    if(!mysqli_stmt_prepare($stmt, $sql)){
-        header("location: ../signup.php?error=stmtfailed");
-        exit();
-    }
     mysqli_stmt_bind_param($stmt, "ssss", $name, $email, $username, $pwd);
     mysqli_stmt_execute($stmt);
     mysqli_stmt_close($stmt);
