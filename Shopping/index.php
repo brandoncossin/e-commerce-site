@@ -1,74 +1,36 @@
 <?php
+
 //Brandon Cossin
 // For Intro to Database Class Spring 2021
 
 //start session
 session_start();
-require_once('./php/CreateDb.php');
-require_once('./php/component.php');
+require_once('./includes/functions.inc.php');
+require_once('./includes/dbh.inc.php');
 $name = "";
-$nameErr = "";
 $brand = "";
 $order = "";
 $AZorder = "";
-
-//create instance of Createdb class
-$database = new CreateDb("Productdb", "Producttb");
-if (isset($_POST['add'])){
-  /// print_r($_POST['product_id']);
-  if(isset($_SESSION['cart'])){
-
-      $item_array_id = array_column($_SESSION['cart'], "product_id");
-
-      if(in_array($_POST['product_id'], $item_array_id)){
-          echo "<script>alert('Product is already added in the cart..!')</script>";
-          echo "<script>window.location = 'index.php'</script>";
-      }else{
-
-          $count = count($_SESSION['cart']);
-          $item_array = array(
-              'product_id' => $_POST['product_id']
-          );
-
-          $_SESSION['cart'][$count] = $item_array;
-      }
-
-  }else{
-
-      $item_array = array(
-              'product_id' => $_POST['product_id']
-      );
-
-      // Create new session variable
-      $_SESSION['cart'][0] = $item_array;
-      print_r($_SESSION['cart']);
+if(isset($_POST['add'])){
+  
+  if(isset($_SESSION["accountUsername"])){
+  $accountID = (int)$_SESSION['accountID'];
+  $product_id = (int)$_POST['product_id'];
+  $product_price = (int)$_POST['product_price'];
+  addToCart($conn, $accountID, $product_id, $product_price);
   }
-}
-
-/*
-if ($_SERVER["REQUEST_METHOD"] == "GET") {
-if (empty($_GET["name"])) {
-  $nameErr = "Name is required";
-} else {
-  $name = test_input($_GET["name"]);
-  // check if name only contains letters and whitespace
-  if (!preg_match("/^[a-zA-Z-' ]*$/",$name)) {
-    $nameErr = "Only letters and white space allowed";
+  else{
+    echo "<div class=\"alert alert-danger\">
+    <strong>Danger!</strong> Log in or create account to add to cart.
+  </div>";
   }
+  
 }
-}
-*/
 //This checks the Get request for name
 if(isset($_GET['name'])){
   $name = test_input($_GET["name"]);
 }
-//Function that prevents sql injection on input
-function test_input($data) {
-$data = trim($data);
-$data = stripslashes($data);
-$data = htmlspecialchars($data);
-return $data;
-}
+
 //This checks the Get request for brand
 if(isset($_GET['brand-select'])){
 $brand = $_GET['brand-select'];
@@ -101,14 +63,8 @@ if(isset($_POST['order-select'])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tech Fun House</title>
 
-    <!--Font Awesome-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.css" 
-    integrity="sha512-9iWaz7iMchMkQOKA8K4Qpz6bpQRbhedFJB+MSdmJ5Nf4qIN1+5wOVnzg5BQs/mYH3sKtzY+DOgxiwMz8ZtMCsw==" 
-    crossorigin="anonymous" />
-
   <!-- J-Query-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="jquery-3.5.1.min.js"></script>
   
   <!--Bootstrap-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" 
@@ -116,7 +72,7 @@ if(isset($_POST['order-select'])){
 
 <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" 
-integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+  integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css"> 
   <!--This helps the page reset variables -->
   <script>
@@ -132,10 +88,6 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
     <header>
     <div class="strip d-flex justify-content-between px-4 py-1 bg-light">
     <P class= "font-size-20 text-black-50 m-0"> Project Created For Intro-To-Database-Design </p>
-    <div class="font-size-14">
-    <a href = "#" class="px-3 border-right border-left text-dark">Login</a>
-    <a href = "#" class="px-3 border-right text-dark">Wishlist(0)</a>
-    </div>
     </div>
     <!--start #nav-bar -->
 
@@ -164,7 +116,7 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
         </li>
         <!-- Brand Select -->
         <li class="nav-item">
-          <a class="nav-link" href="index.php?brand-select=Samsung#"
+          <a class="nav-link" href="index.php?brand-select=Samsung"
           id = "Samsung-submit" type="submit" name="brand-select" value="Samsung">Samsung</a>
         </li>
           <a class="nav-link" href="index.php?brand-select=Apple" 
@@ -173,31 +125,21 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
           <a class="nav-link" href="index.php?brand-select=Microsoft"
           id = "Microsoft-submit" type="submit" name="brand-select" value="Microsoft">Microsoft</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="signup.php">Sign up</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="login.php">Log in</a>
-        </li>
+        <?php
+          if(isset($_SESSION["accountUsername"])){
+            $accountUsername = $_SESSION["accountUsername"];
+            echo "<li class=\"nav-item\"><a class=\"nav-link\" href=\"profile.php\">$accountUsername</a></li>";
+            echo "<li class=\"nav-item\"><a class=\"nav-link\" href=\"logout.php\">Log out</a></li>";
+          }
+          else{
+            echo "<li class=\"nav-item\"><a class=\"nav-link\" href=\"signup.php\">Sign up</a></li>";
+            echo "<li class=\"nav-item\"><a class=\"nav-link\" href=\"login.php\">Log in</a></li>";
+          }
+
+        ?>
   </form>
         
       </ul>
-      <form action= "#" class= "font-size-14 font-rale">
-      <a href = "#" class = "py-2 rounded-pill color-primary-bg">
-      <span class="font-size-16 px-2 text-white"> <i class="fas fa-shopping-cart"></i></span>
-      <span class="px-3 py-2 rounded-pill text-dark bg-light">
-      <?php
-//CART "SESSION" THAT COUNTS HOW MANY ITEMS IN USERS ACCOUNT 
-//WORK IN PROGRESS, VERY LATE PROJECT IDEA     
-if(isset($_SESSION['cart'])){
-  $count = count($_SESSION['cart']);
-  echo "<span id=\"cart_count\" class=\"text-warning bg-light\">$count</span>";
-}else{
-  echo "<span id=\"cart_count\" class=\"text-warning bg-light\">0</span>";
-
-}
-?>
-</span>
 </a>
 </form>
     </div>
@@ -268,7 +210,7 @@ if(isset($_SESSION['cart'])){
     $sql = "SELECT * FROM producttb WHERE product_name LIKE '%$name%' ORDER by product_name $AZorder";
   }
   //PROCESSES THE SQL COMMAND
-    $result = mysqli_query($database->con, $sql);
+    $result = mysqli_query($conn, $sql);
     while($row = mysqli_fetch_assoc($result)){
       component($row['product_name'], $row['product_price'], $row['product_image'], $row['id']);
     }

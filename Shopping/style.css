@@ -1,8 +1,10 @@
 img{
-    max-width: 100%;
-    height: auto;
+    
+    height:200px;
     background: lightblue;
     background: radial-gradient(white 30%, lightblue 70%);
+    
+
 }
 
 .color-primary{

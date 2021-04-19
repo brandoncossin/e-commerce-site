@@ -75,43 +75,35 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
 </nav>
     </header>
 <!--start of main-->
-<?php
-  if(isset($_GET["error"])){ 
-    if($_GET["error"] == "emptyinput"){
-    echo "<div class=\"alert alert-danger\">
-    <strong>Danger!</strong> Fill in All Fields.
-  </div>";
-    }
-    if($_GET["error"] == "wronglogin"){
-      echo "<div class=\"alert alert-danger\">
-      <strong>Danger!</strong> Incorrect Login.
-    </div>";
-      }
-  }
-?>
 <div class="col d-flex justify-content-center">
 <div class="card" style="width: 35rem;">
   <div class="card-body">
-    <h5 class="card-title">Log In</h5>
-    <h6 class="card-subtitle mb-2 text-muted">Log into your account. To place an order please log in.</h6>
-    <ul class="list-group list-group-flush">
-    <form action= "includes/login.inc.php" method="post"> 
-    <div class="row">
-    <li class="list-group-item">
-    <input type="text" name="uid" placeholder="Username...">
-    <input type="password" name="pwd" placeholder="Password..."></li>
-</div>
-   
-    <br>
-     <div class="row">
-    <div class="col-4">
-        <button type="submit" name="submit">Log In</button>
-</div>
+  <?php 
+  $accountUsername = $_SESSION["accountUsername"];
+  $accountWallet = $_SESSION["accountWallet"];
+  echo "<h5 class=\"card-title\">Welcome $accountUsername</h5>";
+  echo "<h6 class=\"card-subtitle mb-2 text-muted\">Your account has $$accountWallet</h6>";
+  if(array_key_exists('button1', $_get)) {
+    //updateWallet100($conn, $accountUsername);
+}
+  ?>
+   <form method="get">
+  <div class="row align-items-start">
+  <br>
+    <div class="col">
+      Add $100
+      <input type="submit" name="button1" class= "button" value = "Add"/>
     </div>
-</form>
-  </ul>
+    <div class="col">
+      Add $500
+    </div>
+    <div class="col">
+      Add $1000
+    </div>
   </div>
-</div>
+  </form>
+    </div>
+    </div>
 </div>
 
 </body>

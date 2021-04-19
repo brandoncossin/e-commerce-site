@@ -1,73 +1,15 @@
-<?php
-//Brandon Cossin
-// For Intro to Database Class Spring 2021
-
-//start session
-session_start();
-require_once('./php/CreateDb.php');
-require_once('./php/component.php');
-$name = "";
-$nameErr = "";
-$brand = "";
-$order = "";
-$AZorder = "";
-
-//create instance of Createdb class
-$database = new CreateDb("Productdb", "Producttb");
-if (isset($_POST['add'])){
-  /// print_r($_POST['product_id']);
-  if(isset($_SESSION['cart'])){
-
-      $item_array_id = array_column($_SESSION['cart'], "product_id");
-
-      if(in_array($_POST['product_id'], $item_array_id)){
-          echo "<script>alert('Product is already added in the cart..!')</script>";
-          echo "<script>window.location = 'index.php'</script>";
-      }else{
-
-          $count = count($_SESSION['cart']);
-          $item_array = array(
-              'product_id' => $_POST['product_id']
-          );
-
-          $_SESSION['cart'][$count] = $item_array;
-      }
-
-  }else{
-
-      $item_array = array(
-              'product_id' => $_POST['product_id']
-      );
-
-      // Create new session variable
-      $_SESSION['cart'][0] = $item_array;
-      print_r($_SESSION['cart']);
-  }
-}
-
-
-
-//Function that prevents sql injection on input
-function test_input($data) {
-$data = trim($data);
-$data = stripslashes($data);
-$data = htmlspecialchars($data);
-return $data;
-}
-
-?>
+<!--Brandon Cossin
+For Intro to Database Class Spring 2021-->
 <!DOCTYPE html>
+<?php
+session_start();
+?>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tech Fun House</title>
-
-    <!--Font Awesome-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.css" 
-    integrity="sha512-9iWaz7iMchMkQOKA8K4Qpz6bpQRbhedFJB+MSdmJ5Nf4qIN1+5wOVnzg5BQs/mYH3sKtzY+DOgxiwMz8ZtMCsw==" 
-    crossorigin="anonymous" />
 
   <!-- J-Query-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -95,10 +37,6 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
 <header>
     <div class="strip d-flex justify-content-between px-4 py-1 bg-light">
     <P class= "font-size-20 text-black-50 m-0"> Project Created For Intro-To-Database-Design </p>
-    <div class="font-size-14">
-    <a href = "#" class="px-3 border-right border-left text-dark">Login</a>
-    <a href = "#" class="px-3 border-right text-dark">Wishlist(0)</a>
-    </div>
     </div>
     <!--start #nav-bar -->
 
@@ -122,32 +60,19 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
         <li class="nav-item">
           <a class="nav-link" href="signup.php"></a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="signup.php">Sign up</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="login.php">Log in</a>
-        </li>
-  </form>
-      </ul>
-      <form action= "#" class= "font-size-14 font-rale">
-      <a href = "#" class = "py-2 rounded-pill color-primary-bg">
-      <span class="font-size-16 px-2 text-white"> <i class="fas fa-shopping-cart"></i></span>
-      <span class="px-3 py-2 rounded-pill text-dark bg-light">
-      <?php
-//CART "SESSION" THAT COUNTS HOW MANY ITEMS IN USERS ACCOUNT 
-//WORK IN PROGRESS, VERY LATE PROJECT IDEA     
-if(isset($_SESSION['cart'])){
-  $count = count($_SESSION['cart']);
-  echo "<span id=\"cart_count\" class=\"text-warning bg-light\">$count</span>";
-}else{
-  echo "<span id=\"cart_count\" class=\"text-warning bg-light\">0</span>";
+        <?php
+          if(isset($_SESSION["accountUsername"])){
+            echo "<li class=\"nav-item\"><a class=\"nav-link\" href=\"profile.php\">Profile Page</a></li>";
+            echo "<li class=\"nav-item\"><a class=\"nav-link\" href=\"logout.php\">Log out</a></li>";
+          }
+          else{
+            echo "<li class=\"nav-item\"><a class=\"nav-link\" href=\"signup.php\">Sign up</a></li>";
+            echo "<li class=\"nav-item\"><a class=\"nav-link\" href=\"login.php\">Log in</a></li>";
+          }
 
-}
-?>
-</span>
-</a>
-</form>
+        ?>
+      </ul>
+      
     </div>
   </div>
 </nav>
@@ -155,6 +80,25 @@ if(isset($_SESSION['cart'])){
 </body>
 
 <!--start of main-->
+<?php
+  if(isset($_GET["error"])){
+    if($_GET["error"] == "none"){
+      echo "<div class=\"alert alert-success\">
+      <strong>Success!</strong> Account Successfully Made.
+    </div>";
+    }
+    if($_GET["error"] == "emptyinput"){
+    echo "<div class=\"alert alert-danger\">
+    <strong>Danger!</strong> Fill in All Fields.
+  </div>";
+    }
+    if($_GET["error"] == "usernametaken"){
+      echo "<div class=\"alert alert-danger\">
+      <strong>Danger!</strong> Username Already in Use.
+    </div>";
+      }
+  }
+?>
 <div class="col d-flex justify-content-center">
 <div class="card" style="width: 35rem;">
   <div class="card-body">
@@ -169,13 +113,14 @@ if(isset($_SESSION['cart'])){
     <li class="list-group-item"><input type="text" name="email" placeholder="Email..."></li>
 </div>
 <div class="row">
-    <li class="list-group-item"><input type="text" name="uid" placeholder="Username..."></li>
+    <li class="list-group-item"><input type="text" name="username" placeholder="Username..."></li>
 </div>
     <div class="row">
     <li class="list-group-item">
     <input type="password" name="pwd" placeholder="Password...">
-    <input type="password" name="pwdrepeat" placeholder="Repeat Password..."></li>
+    <input type="password" name="pwdRepeat" placeholder="Repeat Password..."></li>
 </div>
+<br>
     <div class="row">
     <div class="col-4">
         <button type="submit" name="submit">Sign Up</button>
