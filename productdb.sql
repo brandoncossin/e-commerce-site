@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.4
+-- version 5.1.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 19, 2021 at 03:56 PM
--- Server version: 10.4.17-MariaDB
--- PHP Version: 8.0.2
+-- Generation Time: Apr 22, 2021 at 05:02 AM
+-- Server version: 10.4.18-MariaDB
+-- PHP Version: 8.0.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -34,7 +34,7 @@ CREATE TABLE `account` (
   `accountUsername` varchar(64) DEFAULT NULL,
   `accountPassword` varchar(64) DEFAULT NULL,
   `accountWallet` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `account`
@@ -54,26 +54,18 @@ INSERT INTO `account` (`accountID`, `accountName`, `accountEmail`, `accountUsern
 CREATE TABLE `cart` (
   `accountID` int(11) NOT NULL,
   `id` int(11) NOT NULL,
-  `product_price` float DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `product_price` float DEFAULT NULL,
+  `quantity` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `cart`
 --
 
-INSERT INTO `cart` (`accountID`, `id`, `product_price`) VALUES
-(1, 1, 1799),
-(1, 1, 1799),
-(1, 1, 1799),
-(1, 1, 1799),
-(1, 1, 1799),
-(1, 1, 1799),
-(1, 8, 199),
-(1, 8, 199),
-(1, 7, 249),
-(1, 3, 749),
-(1, 8, 199),
-(1, 9, 299);
+INSERT INTO `cart` (`accountID`, `id`, `product_price`, `quantity`) VALUES
+(1, 1, 1799, 0),
+(1, 8, 199, 0),
+(1, 9, 299, 0);
 
 -- --------------------------------------------------------
 
@@ -87,7 +79,7 @@ CREATE TABLE `producttb` (
   `product_price` float DEFAULT NULL,
   `product_image` varchar(100) DEFAULT NULL,
   `brand` varchar(20) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `producttb`
@@ -126,6 +118,13 @@ ALTER TABLE `account`
   ADD PRIMARY KEY (`accountID`);
 
 --
+-- Indexes for table `cart`
+--
+ALTER TABLE `cart`
+  ADD PRIMARY KEY (`accountID`,`id`),
+  ADD KEY `id` (`id`);
+
+--
 -- Indexes for table `producttb`
 --
 ALTER TABLE `producttb`
@@ -142,10 +141,15 @@ ALTER TABLE `account`
   MODIFY `accountID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `producttb`
+-- Constraints for dumped tables
 --
-ALTER TABLE `producttb`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- Constraints for table `cart`
+--
+ALTER TABLE `cart`
+  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`accountID`) REFERENCES `account` (`accountID`),
+  ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`id`) REFERENCES `producttb` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

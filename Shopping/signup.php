@@ -1,24 +1,47 @@
 <!--Brandon Cossin
 For Intro to Database Class Spring 2021-->
-<!DOCTYPE html>
 <?php
 session_start();
+require_once('./includes/functions.inc.php');
+require_once('./includes/dbh.inc.php');
+if(isset($_POST["submit"])){
+  $name = $_POST["name"];
+  $email = $_POST["email"];
+  $username = $_POST["username"];
+  $pwd = $_POST["pwd"];
+  if(empty($name) || empty($username) || empty($email) || empty($pwd)){
+    header("location: ../Shopping/signup.php");
+    $_SESSION['login_error_msg'] = "Fill in all fields.";
+  }
+  if(uidExists($conn, $username) !== false){
+    header("location: ../Shopping/login.php");
+    $_SESSION['login_error_msg'] = "Username already exists.";
+  }
+  else{
+  createUser($conn, $name, $email, $username, $pwd);
+  }
+}
+  if(!empty($_SESSION['login_error_msg'])){
+    echo "<div class=\"alert alert-danger\">
+    <strong>Danger!</strong> ";
+    echo $_SESSION['login_error_msg'];
+    echo "</div>";
+    unset($_SESSION['login_error_msg']);
+}
 ?>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tech Fun House</title>
-
   <!-- J-Query-->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="jquery-3.5.1.min.js"></script>
-  
   <!--Bootstrap-->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" 
     integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
-
 <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" 
 integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
@@ -81,23 +104,6 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
 
 <!--start of main-->
 <?php
-  if(isset($_GET["error"])){
-    if($_GET["error"] == "none"){
-      echo "<div class=\"alert alert-success\">
-      <strong>Success!</strong> Account Successfully Made.
-    </div>";
-    }
-    if($_GET["error"] == "emptyinput"){
-    echo "<div class=\"alert alert-danger\">
-    <strong>Danger!</strong> Fill in All Fields.
-  </div>";
-    }
-    if($_GET["error"] == "usernametaken"){
-      echo "<div class=\"alert alert-danger\">
-      <strong>Danger!</strong> Username Already in Use.
-    </div>";
-      }
-  }
 ?>
 <div class="col d-flex justify-content-center">
 <div class="card" style="width: 35rem;">
@@ -105,7 +111,7 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
     <h5 class="card-title">Sign Up</h5>
     <h6 class="card-subtitle mb-2 text-muted">Create your account. It's free and only takes a minute.</h6>
     <ul class="list-group list-group-flush">
-    <form action= "includes/signup.inc.php" method="post"> 
+    <form method="post"> 
     <div class="row">
     <li class="list-group-item"><input type="text" name="name" placeholder="Name..."></li>
 </div>

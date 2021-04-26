@@ -81,27 +81,53 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
   <?php 
   $accountUsername = $_SESSION["accountUsername"];
   $accountWallet = $_SESSION["accountWallet"];
+  $accountid = $_SESSION["accountID"];
   echo "<h5 class=\"card-title\">Welcome $accountUsername</h5>";
   echo "<h6 class=\"card-subtitle mb-2 text-muted\">Your account has $$accountWallet</h6>";
-  if(array_key_exists('button1', $_get)) {
-    //updateWallet100($conn, $accountUsername);
+  if(isset($_POST['button1'])){
+    updateWallet100($conn, $accountUsername);
+  }
+if(isset($_POST['button2'])){
+  deleteAccount($conn, $accountUsername);
+}
+if(isset($_POST['button3'])){
+  clearCart($conn, $accountid);
+  
 }
   ?>
-   <form method="get">
+   <form method="post">
   <div class="row align-items-start">
   <br>
+  <!--PHP profile functions -->
     <div class="col">
+    <button type="submit" class="btn btn-primary" name="button1" >
       Add $100
-      <input type="submit" name="button1" class= "button" value = "Add"/>
+    </button>
     </div>
     <div class="col">
-      Add $500
+    <button type="submit" class="btn btn-danger" name="button2">
+     Delete account
+     </button>
     </div>
     <div class="col">
-      Add $1000
+    <button type="submit" class="btn btn-danger" name="button3">
+     Clear Cart
+     </button>
     </div>
   </div>
   </form>
+  <br>
+  <?php 
+  echo "<hr><h5 class=\"card-title\">Cart</h5>";
+  $accountUsername = $_SESSION["accountUsername"];
+  $accountid = $_SESSION["accountID"];
+  viewCart($conn, $accountid);
+  ?>
+  <hr>
+  Order Summary: <?php
+  $accountid = $_SESSION["accountID"];
+  sumCart($conn, $accountid);
+?>
     </div>
     </div>
 </div>

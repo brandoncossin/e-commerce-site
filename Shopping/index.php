@@ -7,6 +7,14 @@
 session_start();
 require_once('./includes/functions.inc.php');
 require_once('./includes/dbh.inc.php');
+//checks after user creates account
+if(!empty($_SESSION['create_msg'])){
+  echo "<div class=\"alert alert-success\">
+  <strong>Success!</strong>";
+  echo $_SESSION['create_msg'];
+  echo "</div>";
+  unset($_SESSION['create_msg']);
+  }
 $name = "";
 $brand = "";
 $order = "";
@@ -28,6 +36,8 @@ if(isset($_POST['add'])){
 }
 //This checks the Get request for name
 if(isset($_GET['name'])){
+  // Test input is a function that removes slashes and special characters
+  // This is done as a way to prevent sql injection
   $name = test_input($_GET["name"]);
 }
 
@@ -100,7 +110,6 @@ if(isset($_POST['order-select'])){
     <!--Start search -->
     
 <form method="get" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">  
-  
   <div class="input-group">
       <input class="form-control" placeholder="Search for..." type="text" name="name" value="<?php echo $name;?>">
       <span class="input-group-btn">
@@ -137,11 +146,10 @@ if(isset($_POST['order-select'])){
           }
 
         ?>
-  </form>
+  
         
       </ul>
 </a>
-</form>
     </div>
   </div>
 </nav>

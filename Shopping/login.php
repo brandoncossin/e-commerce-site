@@ -4,6 +4,27 @@
 session_start();
 require_once('./includes/functions.inc.php');
 require_once('./includes/dbh.inc.php');
+
+if(isset($_POST["submit"])){
+  $accountUsername = $_POST["uid"];
+  $accountPwd = $_POST["pwd"];
+  if(empty($accountUsername) || empty($accountPwd)){
+    header("location: ../Shopping/login.php");
+    $_SESSION['login_error_msg'] = "Fill in all fields.";
+    exit();
+}
+else{
+  userLogin($conn, $accountUsername, $accountPwd);
+}
+}
+if(!empty($_SESSION['login_error_msg'])){
+    //display the message however you want
+    echo "<div class=\"alert alert-danger\">
+    <strong>Danger!</strong> ";
+    echo $_SESSION['login_error_msg'];
+    echo "</div>";
+    unset($_SESSION['login_error_msg']);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,18 +97,6 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
     </header>
 <!--start of main-->
 <?php
-  if(isset($_GET["error"])){ 
-    if($_GET["error"] == "emptyinput"){
-    echo "<div class=\"alert alert-danger\">
-    <strong>Danger!</strong> Fill in All Fields.
-  </div>";
-    }
-    if($_GET["error"] == "wronglogin"){
-      echo "<div class=\"alert alert-danger\">
-      <strong>Danger!</strong> Incorrect Login.
-    </div>";
-      }
-  }
 ?>
 <div class="col d-flex justify-content-center">
 <div class="card" style="width: 35rem;">
@@ -95,7 +104,7 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
     <h5 class="card-title">Log In</h5>
     <h6 class="card-subtitle mb-2 text-muted">Log into your account. To place an order please log in.</h6>
     <ul class="list-group list-group-flush">
-    <form action= "includes/login.inc.php" method="post"> 
+    <form method="post"> 
     <div class="row">
     <li class="list-group-item">
     <input type="text" name="uid" placeholder="Username...">
