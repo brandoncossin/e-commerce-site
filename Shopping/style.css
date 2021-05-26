@@ -1,12 +1,3 @@
-img{
-    
-    height:200px;
-    background: lightblue;
-    background: radial-gradient(white 30%, lightblue 70%);
-    
-
-}
-
 .color-primary{
     color: #003859
 }
@@ -29,4 +20,26 @@ img{
     text-align: right;
     padding: 0 0.9rem 0.1rem 0.9rem;
     border-radius: 3rem;
+}
+/* input fix to fix ios css pre-sets for submit buttons
+*/
+
+.nav-link {
+    -webkit-appearance: none;
+}
+
+ input[type="submit"], input[type="reset"] {
+    -webkit-appearance: none;
+ }
+
+img {
+     max-height: 50%;
+     background: radial-gradient(white 30%, lightblue 70%);
+}
+ @media only screen and (min-device-width: 600px) {
+    img{
+    height:200px;
+    background: lightblue;
+    background: radial-gradient(white 30%, lightblue 70%);
+    }
 }

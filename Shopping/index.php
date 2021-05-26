@@ -83,7 +83,11 @@ if(isset($_POST['order-select'])){
 <!-- JavaScript Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" 
   integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+   
+   <!--CSS File-->
     <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
   <!--This helps the page reset variables -->
   <script>
     if ( window.history.replaceState ) {
@@ -95,13 +99,18 @@ if(isset($_POST['order-select'])){
 </head>
 <body>
 <!-- start #header -->
+<!--
     <header>
     <div class="strip d-flex justify-content-between px-4 py-1 bg-light">
     <P class= "font-size-20 text-black-50 m-0"> Project Created For Intro-To-Database-Design </p>
     </div>
-    <!--start #nav-bar -->
 
-    <nav class="navbar navbar-expand-lg navbar-dark color-second-bg">
+  -->
+    <!--start #nav-bar -->
+  
+   
+
+<nav class="navbar navbar-expand-lg navbar-dark color-second-bg">
   <div class="container-fluid">
     <a class="navbar-brand" href="index.php">Tech Fun House</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -112,9 +121,9 @@ if(isset($_POST['order-select'])){
 <form method="get" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">  
   <div class="input-group">
       <input class="form-control" placeholder="Search for..." type="text" name="name" value="<?php echo $name;?>">
-      <span class="input-group-btn">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </span>
+      <div class="input-group-append">
+      <button class="btn btn-primary" type="submit"><i class="fa fa-search"></i></button>
+</div>
     </div>
   </form>
 
@@ -154,7 +163,6 @@ if(isset($_POST['order-select'])){
   </div>
 </nav>
     </header>
-
 <!--!start #header -->
 
 <!--start #main-site -->

@@ -49,10 +49,12 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
 </head>
 <body>
 <!-- start #header -->
+<!--
 <header>
     <div class="strip d-flex justify-content-between px-4 py-1 bg-light">
     <P class= "font-size-20 text-black-50 m-0"> Project Created For Intro-To-Database-Design </p>
     </div>
+-->
     <!--start #nav-bar -->
 
     <nav class="navbar navbar-expand-lg navbar-dark color-second-bg">
@@ -65,15 +67,6 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
       <ul class="navbar-nav m-auto ">
         <li class="nav-item">
           <a class="nav-link" href="index.php">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="signup.php"></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="signup.php"></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="signup.php"></a>
         </li>
         <?php
           if(isset($_SESSION["accountUsername"])){
@@ -114,7 +107,8 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
     <br>
      <div class="row">
     <div class="col-4">
-        <button type="submit" name="submit">Log In</button>
+        <button type="submit" class="btn btn-secondary" name="submit">Log In</button>
+       
 </div>
     </div>
 </form>

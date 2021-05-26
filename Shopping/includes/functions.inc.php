@@ -92,7 +92,8 @@ function addToCart($conn, $accountID, $productid, $productprice){
     $stmt = mysqli_stmt_init($conn);
     mysqli_stmt_prepare($stmt, $sql);
     mysqli_stmt_execute($stmt);
-    header("location: ../Shopping/index.php");
+    $referer = $_SERVER['HTTP_REFERER'];
+    header("Location: $referer");
     $_SESSION["cartValue"] = true;
     exit();
 }

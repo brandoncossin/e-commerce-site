@@ -29,9 +29,11 @@ integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9E
 <body>
 <!-- start #header -->
 <header>
+  <!--
     <div class="strip d-flex justify-content-between px-4 py-1 bg-light">
     <P class= "font-size-20 text-black-50 m-0"> Project Created For Intro-To-Database-Design </p>
     </div>
+-->
     <!--start #nav-bar -->
 
     <nav class="navbar navbar-expand-lg navbar-dark color-second-bg">
